@@ -16,7 +16,8 @@ export default async function HomePage() {
     profileName,
     role,
   } = await getDashboardData();
-  if (authenticated && role === "technician" && hasSupabaseConfig()) redirect("/field");
+  if (authenticated && role === "technician" && hasSupabaseConfig())
+    redirect("/field");
   if (authenticated && companyId === "unassigned") redirect("/access-pending");
   return (
     <Dashboard

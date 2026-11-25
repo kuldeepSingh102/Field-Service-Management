@@ -7,16 +7,48 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   if (!hasSupabaseConfig()) return NextResponse.json({ assets: [] });
   const supabase = await createClient();
-  if (!supabase) return NextResponse.json({ error: "Supabase is not configured." }, { status: 503 });
+  if (!supabase)
+    return NextResponse.json(
+      { error: "Supabase is not configured." },
+      { status: 503 },
+    );
   const { data: auth } = await supabase.auth.getClaims();
   const userId = auth?.claims?.sub;
-  if (!userId) return NextResponse.json({ error: "Authentication required." }, { status: 401 });
-  const { data: profile, error: profileError } = await supabase.from("profiles").select("company_id,approval_status").eq("id", userId).maybeSingle();
-  if (profileError) return NextResponse.json({ error: profileError.message }, { status: 400 });
-  if (!profile?.company_id || profile.approval_status !== "approved") return NextResponse.json({ error: "Approved company access is required." }, { status: 403 });
-  const { data, error } = await supabase.from("assets").select("asset_tag,asset_type,name,location,district,condition").eq("company_id", profile.company_id).order("asset_tag", { ascending: true }).limit(200);
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json({ assets: (data ?? []).map((asset) => ({ tag: asset.asset_tag, type: asset.asset_type, name: asset.name, location: asset.location, district: asset.district, condition: asset.condition })) });
+  if (!userId)
+    return NextResponse.json(
+      { error: "Authentication required." },
+      { status: 401 },
+    );
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("company_id,approval_status")
+    .eq("id", userId)
+    .maybeSingle();
+  if (profileError)
+    return NextResponse.json({ error: profileError.message }, { status: 400 });
+  if (!profile?.company_id || profile.approval_status !== "approved")
+    return NextResponse.json(
+      { error: "Approved company access is required." },
+      { status: 403 },
+    );
+  const { data, error } = await supabase
+    .from("assets")
+    .select("asset_tag,asset_type,name,location,district,condition")
+    .eq("company_id", profile.company_id)
+    .order("asset_tag", { ascending: true })
+    .limit(200);
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({
+    assets: (data ?? []).map((asset) => ({
+      tag: asset.asset_tag,
+      type: asset.asset_type,
+      name: asset.name,
+      location: asset.location,
+      district: asset.district,
+      condition: asset.condition,
+    })),
+  });
 }
 
 export async function POST(request: Request) {
@@ -49,10 +81,7 @@ export async function POST(request: Request) {
   if (profileError) {
     return NextResponse.json({ error: profileError.message }, { status: 400 });
   }
-  if (
-    !profile?.company_id ||
-    profile.approval_status !== "approved"
-  ) {
+  if (!profile?.company_id || profile.approval_status !== "approved") {
     return NextResponse.json(
       { error: "Approved company access is required." },
       { status: 403 },
@@ -74,11 +103,7 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-  if (
-    typeof input !== "object" ||
-    input === null ||
-    Array.isArray(input)
-  ) {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) {
     return NextResponse.json(
       { error: "Asset details are required." },
       { status: 400 },

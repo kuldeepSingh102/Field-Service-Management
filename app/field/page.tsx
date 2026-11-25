@@ -10,10 +10,21 @@ export default async function FieldPage() {
   const configured = hasSupabaseConfig();
   if (configured) {
     const supabase = await createClient();
-    const { data } = supabase ? await supabase.auth.getClaims() : { data: null };
+    const { data } = supabase
+      ? await supabase.auth.getClaims()
+      : { data: null };
     if (!data?.claims?.sub) redirect("/login");
-    const { data: profile } = await supabase!.from("profiles").select("role").eq("id", data.claims.sub).maybeSingle();
+    const { data: profile } = await supabase!
+      .from("profiles")
+      .select("role")
+      .eq("id", data.claims.sub)
+      .maybeSingle();
     if (profile?.role !== "technician") redirect("/");
   }
-  return <FieldWorkspace initialJobs={configured ? [] : demoFieldJobs} companyId={configured ? "" : "demo"} />;
+  return (
+    <FieldWorkspace
+      initialJobs={configured ? [] : demoFieldJobs}
+      companyId={configured ? "" : "demo"}
+    />
+  );
 }

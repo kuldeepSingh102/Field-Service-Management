@@ -49,9 +49,6 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
           gridline<span className="-ml-2 text-[#54b783]">.</span>
         </Link>
         <section className="rounded-xl border border-line bg-white p-7 shadow-card">
-          <p className="font-mono-ui text-[9px] tracking-[.1em] text-[#6f8e79]">
-            RUGGED MONITORING
-          </p>
           <h1 className="mt-2 font-display text-xl font-bold tracking-tight">
             Sign in to Gridline
           </h1>
@@ -104,7 +101,10 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
             </Button>
           </form>
           <p className="mt-5 text-center text-[9px] leading-relaxed text-muted">
-            New to Gridline? <Link href="/signup" className="font-semibold text-[#39845e]">Create an account</Link>
+            New to Gridline?{" "}
+            <Link href="/signup" className="font-semibold text-[#39845e]">
+              Create an account
+            </Link>
           </p>
         </section>
         <p className="mt-5 text-center text-[9px] text-muted">

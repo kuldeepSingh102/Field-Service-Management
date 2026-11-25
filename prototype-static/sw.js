@@ -1,4 +1,4 @@
-const CACHE = "gridline-shell-v1";
+const CACHE = "gridline-shell-v4";
 const SHELL = [
   "./",
   "./index.html",

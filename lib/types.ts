@@ -18,7 +18,11 @@ export type WorkOrder = {
   completedAt?: string;
 };
 
-export type TechnicianOption = { id: string; name: string; availability: "available" | "assigned" | "off_shift" | "on_leave" };
+export type TechnicianOption = {
+  id: string;
+  name: string;
+  availability: "available" | "assigned" | "off_shift" | "on_leave";
+};
 export type AssetRecord = {
   tag: string;
   type: string;

@@ -57,7 +57,10 @@ export async function GET(
     .eq("public_id", publicId)
     .maybeSingle();
   if (workOrderError) {
-    return NextResponse.json({ error: workOrderError.message }, { status: 400 });
+    return NextResponse.json(
+      { error: workOrderError.message },
+      { status: 400 },
+    );
   }
   if (!workOrder) {
     return NextResponse.json(
