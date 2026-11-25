@@ -30,11 +30,11 @@ const demoMetrics: DashboardMetrics = {
   slaCompliance: 96.4,
 };
 export async function getDashboardData(): Promise<{ orders: WorkOrder[]; metrics: DashboardMetrics; connected: boolean; authenticated: boolean; companyId: string; companyName: string; profileName: string; role: string }> {
-  if (!hasSupabaseConfig()) return { orders: demoWorkOrders, metrics: demoMetrics, connected: false, authenticated: false, companyId: "demo", companyName: "Northstar Electric", profileName: "Morgan Chen", role: "supervisor" };
+  if (!hasSupabaseConfig()) return { orders: demoWorkOrders, metrics: demoMetrics, connected: false, authenticated: false, companyId: "demo", companyName: "Rugged Monitoring", profileName: "Aarav Reddy", role: "supervisor" };
   const supabase = await createClient();
-  if (!supabase) return { orders: demoWorkOrders, metrics: demoMetrics, connected: false, authenticated: false, companyId: "demo", companyName: "Northstar Electric", profileName: "Morgan Chen", role: "supervisor" };
+  if (!supabase) return { orders: demoWorkOrders, metrics: demoMetrics, connected: false, authenticated: false, companyId: "demo", companyName: "Rugged Monitoring", profileName: "Aarav Reddy", role: "supervisor" };
   const { data: claims } = await supabase.auth.getClaims();
-  if (!claims?.claims?.sub) return { orders: demoWorkOrders, metrics: demoMetrics, connected: false, authenticated: false, companyId: "demo", companyName: "Northstar Electric", profileName: "Morgan Chen", role: "supervisor" };
+  if (!claims?.claims?.sub) return { orders: demoWorkOrders, metrics: demoMetrics, connected: false, authenticated: false, companyId: "demo", companyName: "Rugged Monitoring", profileName: "Aarav Reddy", role: "supervisor" };
   const { data: profile } = await supabase.from("profiles").select("company_id,name,role").eq("id", claims.claims.sub).maybeSingle();
   const companyId = profile?.company_id ?? "unassigned";
   const { data: company } = profile?.company_id ? await supabase.from("companies").select("name").eq("id", profile.company_id).maybeSingle() : { data: null };
@@ -84,7 +84,7 @@ export async function getDashboardData(): Promise<{ orders: WorkOrder[]; metrics
     const date = new Date(trendStart);
     date.setUTCDate(date.getUTCDate() + index);
     return {
-      day: new Intl.DateTimeFormat("en-US", {
+      day: new Intl.DateTimeFormat("en-IN", {
         weekday: "short",
         timeZone: "UTC",
       }).format(date),
@@ -141,7 +141,7 @@ export async function getDashboardData(): Promise<{ orders: WorkOrder[]; metrics
         priority: order.priority,
         status: order.status === "Completed" ? "Completed" : order.status === "Needs review" ? "Needs review" : order.status === "Cancelled" ? "Open" : order.status === "Open" ? "Open" : "In progress",
         assetTag: order.asset_tag ?? undefined,
-        scheduledAt: order.scheduled_at ? new Date(order.scheduled_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : undefined,
+        scheduledAt: order.scheduled_at ? new Date(order.scheduled_at).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" }) : undefined,
         scheduleAtISO: order.scheduled_at ?? undefined,
         createdAt: order.created_at ?? undefined,
         completedAt: order.completed_at ?? undefined,

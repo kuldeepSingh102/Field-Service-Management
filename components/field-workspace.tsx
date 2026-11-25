@@ -65,7 +65,7 @@ export function FieldWorkspace({
 }) {
   const [jobs, setJobs] = useState(fieldAssignments);
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
-  const [userName, setUserName] = useState("Jamie Rivera");
+  const [userName, setUserName] = useState("Sandeep Reddy");
   const [scope, setScope] = useState(initialCompanyId);
   const [history, setHistory] = useState<
     Array<{ id: string; title: string; location: string }>
@@ -421,7 +421,7 @@ export function FieldWorkspace({
             <div>
               <p className="font-mono-ui text-[9px] tracking-[.1em] text-[#82928a]">
                 {currentDate
-                  ? new Intl.DateTimeFormat("en-US", {
+                  ? new Intl.DateTimeFormat("en-IN", {
                       weekday: "long",
                       month: "long",
                       day: "numeric",
@@ -440,7 +440,7 @@ export function FieldWorkspace({
             <div className="hidden items-center gap-2 rounded-lg border border-line bg-white px-3 py-2 sm:flex">
               <span className="text-xl text-[#daa64f]">☀</span>
               <span>
-                <b className="block text-[12px]">68°</b>
+                <b className="block text-[12px]">28°C</b>
                 <small className="text-[8px] text-muted">Clear skies</small>
               </span>
             </div>
@@ -465,8 +465,8 @@ export function FieldWorkspace({
                 ROUTE DISTANCE
               </small>
               <b className="mt-1 block font-display text-lg">
-                18.6{" "}
-                <small className="text-[9px] font-medium text-muted">mi</small>
+                29.9{" "}
+                <small className="text-[9px] font-medium text-muted">km</small>
               </b>
             </div>
           </div>
@@ -478,7 +478,7 @@ export function FieldWorkspace({
                     Today’s assignments
                   </h2>
                   <p className="mt-1 text-[9px] text-muted">
-                    North District · Route 07
+                    Hyderabad District · Route 07
                   </p>
                 </div>
                 <button
@@ -582,13 +582,13 @@ export function FieldWorkspace({
                   {
                     id: "WO-2824",
                     title: "Service restoration",
-                    location: "601 Riverbend Dr",
+                    location: "Secunderabad, Hyderabad",
                     time: "Today · 8:12 AM",
                   },
                   {
                     id: "WO-2817",
                     title: "Switchgear thermal scan",
-                    location: "2200 Utility Loop",
+                    location: "Balanagar Industrial Area, Hyderabad",
                     time: "Friday · 3:45 PM",
                   },
                   ...history.map((item) => ({

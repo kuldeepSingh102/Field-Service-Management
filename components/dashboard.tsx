@@ -87,30 +87,30 @@ const fieldItems: { label: Page; icon: typeof Grid2X2 }[] = [
 const schedule = [
   {
     time: "8:30",
-    name: "Elena Ruiz",
+    name: "Sandeep Reddy",
     task: "Transformer inspection",
-    zone: "North · TX-1042",
+    zone: "Hyderabad · HYD-TF-1042",
     color: "bg-[#d9efe1]",
   },
   {
     time: "9:00",
-    name: "Marcus Lee",
+    name: "Ananya Rao",
     task: "Power line repair",
-    zone: "Central · Feeder 12",
+    zone: "Ranga Reddy · HYD-FDR-12",
     color: "bg-[#f4e8d2]",
   },
   {
     time: "9:30",
-    name: "Jamie Rivera",
+    name: "Vikram Sharma",
     task: "Meter replacement",
-    zone: "North · Route 07",
+    zone: "Medchal-Malkajgiri · Route 07",
     color: "bg-[#e3eaf5]",
   },
   {
     time: "10:00",
-    name: "Andre Wilson",
+    name: "Priya Nair",
     task: "Substation safety check",
-    zone: "East · SS-04",
+    zone: "Hyderabad · HYD-SS-04",
     color: "bg-[#eee8f5]",
   },
 ];
@@ -169,30 +169,30 @@ const demoInspectionTemplates: InspectionTemplate[] = [
 ];
 const assetRows = [
   {
-    tag: "TX-1042",
+    tag: "HYD-TF-1042",
     type: "Distribution transformer",
-    location: "1842 Willow Creek Rd",
+    location: "Madhapur, Hyderabad",
     condition: "Inspection due",
     status: "Watch",
   },
   {
-    tag: "FEEDER-12",
-    type: "Overhead line · 12.4 mi",
-    location: "Central District",
+    tag: "HYD-FDR-12",
+    type: "Overhead line · 20 km",
+    location: "Gachibowli, Hyderabad",
     condition: "Active repair",
     status: "In service",
   },
   {
-    tag: "SS-04",
+    tag: "HYD-SS-04",
     type: "Distribution substation",
-    location: "55 Industrial Parkway",
+    location: "Begumpet, Hyderabad",
     condition: "Inspection current",
     status: "In service",
   },
   {
-    tag: "POLE-18-22",
+    tag: "HYD-POLE-18-22",
     type: "Wood pole span",
-    location: "1206 Pine Hollow Ln",
+    location: "LB Nagar, Hyderabad",
     condition: "Integrity assessment",
     status: "Watch",
   },
@@ -917,7 +917,7 @@ export function Dashboard({
       createdAt,
       scheduledAt: form.get("scheduledAt")
         ? new Date(String(form.get("scheduledAt"))).toLocaleTimeString(
-            "en-US",
+            "en-IN",
             { hour: "numeric", minute: "2-digit" },
           )
         : undefined,
@@ -1022,7 +1022,7 @@ export function Dashboard({
       ? "daily average unavailable"
       : metrics.completedDailyAverage === 0
         ? "no completions in prior 7 days"
-        : `vs. 7-day daily avg. (${new Intl.NumberFormat("en-US", {
+        : `vs. 7-day daily avg. (${new Intl.NumberFormat("en-IN", {
             maximumFractionDigits: 1,
           }).format(metrics.completedDailyAverage)}/day)`;
   const title =
@@ -1178,7 +1178,7 @@ export function Dashboard({
             <span className="hidden h-5 border-l border-line sm:block" />
             <button className="hidden items-center gap-2 text-[10px] text-[#697970] sm:flex">
               {currentDate
-                ? new Intl.DateTimeFormat("en-US", {
+                ? new Intl.DateTimeFormat("en-IN", {
                     weekday: "short",
                     month: "short",
                     day: "numeric",
@@ -1208,7 +1208,7 @@ export function Dashboard({
               <Eyebrow>
                 {isOverview
                   ? currentDate
-                    ? new Intl.DateTimeFormat("en-US", {
+                    ? new Intl.DateTimeFormat("en-IN", {
                         weekday: "long",
                         month: "long",
                         day: "numeric",
@@ -2065,8 +2065,8 @@ export function Dashboard({
                   {Array.from(
                     new Set([
                       ...(guestMode
-                        ? ["North", "Central", "South", "East"]
-                        : ["North", "Central", "South", "East"]),
+                        ? ["Hyderabad", "Medchal-Malkajgiri", "Ranga Reddy"]
+                        : ["Hyderabad", "Medchal-Malkajgiri", "Ranga Reddy"]),
                       ...orders.map((order) => order.district).filter(Boolean),
                     ]),
                   ).map((district) => (
@@ -2167,7 +2167,7 @@ export function Dashboard({
                 required
                 maxLength={100}
                 name="assetTag"
-                placeholder="e.g. TX-1042"
+                placeholder="e.g. HYD-TF-1042"
                 aria-describedby="asset-tag-help"
               />
               <small id="asset-tag-help" className="mt-1 block text-[9px] text-muted">
@@ -2179,7 +2179,7 @@ export function Dashboard({
                 required
                 maxLength={200}
                 name="name"
-                placeholder="e.g. North feeder transformer"
+                placeholder="e.g. Madhapur distribution transformer"
               />
             </FormField>
             <FormField label="ASSET TYPE">
@@ -2204,7 +2204,7 @@ export function Dashboard({
                   required
                   maxLength={100}
                   name="district"
-                  placeholder="e.g. North"
+                  placeholder="e.g. Hyderabad"
                 />
               </FormField>
               <FormField label="CONDITION">
@@ -2354,7 +2354,7 @@ export function Dashboard({
                                 <div className="flex flex-wrap justify-between gap-2 text-[9px] text-muted">
                                   <span>{update.technician}</span>
                                   <time dateTime={update.createdAt}>
-                                    {new Intl.DateTimeFormat("en-US", {
+                                    {new Intl.DateTimeFormat("en-IN", {
                                       dateStyle: "medium",
                                       timeStyle: "short",
                                     }).format(new Date(update.createdAt))}
@@ -2426,7 +2426,7 @@ export function Dashboard({
                               </span>
                               <span className="mt-1 block text-muted">
                                 {attachment.uploadedBy} ·{" "}
-                                {new Intl.DateTimeFormat("en-US", {
+                                {new Intl.DateTimeFormat("en-IN", {
                                   dateStyle: "medium",
                                   timeStyle: "short",
                                 }).format(new Date(attachment.createdAt))}
@@ -2458,17 +2458,17 @@ export function Dashboard({
               [
                 "SLA watch",
                 "WO-2839 is approaching its response target.",
-                "12 minutes ago · Central District",
+                "12 minutes ago · Ranga Reddy District",
               ],
               [
                 "Crew update",
-                "Elena Ruiz completed her morning inspection.",
-                "38 minutes ago · North District",
+                "Sandeep Reddy completed his morning inspection.",
+                "38 minutes ago · Hyderabad District",
               ],
               [
                 "Schedule change",
-                "Marcus Lee is available for reassignment.",
-                "1 hour ago · Central District",
+                "Ananya Rao is available for reassignment.",
+                "1 hour ago · Ranga Reddy District",
               ],
             ].map(([title, body, time]) => (
               <div key={title} className="py-3">

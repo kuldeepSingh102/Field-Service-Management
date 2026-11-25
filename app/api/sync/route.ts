@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     }
     const { error } = await supabase.from("work_orders").upsert({
       public_id: String(payload.id), company_id: profile.company_id, title, location,
-      district: String(payload.district ?? "North"), asset_tag: String(payload.assetTag ?? "") || null,
+      district: String(payload.district ?? "Hyderabad"), asset_tag: String(payload.assetTag ?? "") || null,
       technician_id: technicianId, priority, status: "Open", description: String(payload.notes ?? ""), created_by: userId,
       scheduled_at: payload.scheduleAtISO ? String(payload.scheduleAtISO) : null,
     }, { onConflict: "company_id,public_id", ignoreDuplicates: true });

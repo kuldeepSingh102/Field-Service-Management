@@ -22,7 +22,7 @@ export async function getFieldJobs(): Promise<FieldJob[]> {
       id: order.public_id,
       title: order.title,
       location: order.location,
-      time: order.scheduled_at ? new Date(order.scheduled_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "Anytime",
+      time: order.scheduled_at ? new Date(order.scheduled_at).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" }) : "Anytime",
       priority: order.priority === "Urgent" || order.priority === "High" ? "High" as const : "Routine" as const,
       status: order.status === "In progress" || order.status === "On site" || order.status === "En route" ? "In progress" as const : "Open" as const,
       progress: 0,

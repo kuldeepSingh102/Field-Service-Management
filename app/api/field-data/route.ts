@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  if (!hasSupabaseConfig()) return NextResponse.json({ companyId: "demo", userName: "Jamie Rivera", jobs: demoFieldJobs });
+  if (!hasSupabaseConfig()) return NextResponse.json({ companyId: "demo", userName: "Sandeep Reddy", jobs: demoFieldJobs });
   const supabase = await createClient();
   if (!supabase) return NextResponse.json({ error: "Supabase is not configured." }, { status: 503 });
   const { data: auth } = await supabase.auth.getClaims();

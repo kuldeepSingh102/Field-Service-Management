@@ -50,7 +50,7 @@ export function LoginForm({ initialError = "" }: { initialError?: string }) {
         </Link>
         <section className="rounded-xl border border-line bg-white p-7 shadow-card">
           <p className="font-mono-ui text-[9px] tracking-[.1em] text-[#6f8e79]">
-            NORTHSTAR ELECTRIC
+            RUGGED MONITORING
           </p>
           <h1 className="mt-2 font-display text-xl font-bold tracking-tight">
             Sign in to Gridline
