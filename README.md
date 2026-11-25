@@ -1,48 +1,84 @@
 # Gridline Field Operations
 
+Offline-capable field service management prototype for electric utility crews. Supervisors use the web dashboard to review and assign jobs; technicians use an installable PWA to complete assigned work, capture notes/photos, and queue updates during poor connectivity.
 
-Offline-capable utility field service workspace built with Next.js App Router, React, TypeScript, Tailwind CSS, shadcn-style UI primitives, and Supabase.
+## Submission links
 
-## Start locally
+- **Source repository:** [github.com/kuldeepSingh102/Field-Service-Management](https://github.com/kuldeepSingh102/Field-Service-Management)
+- **Deployed app:** [field-service-management-eta.vercel.app](https://field-service-management-eta.vercel.app/)
+- **Research note:** [RESEARCH_NOTE.md](./RESEARCH_NOTE.md)
 
-Use Node.js 20.9 or newer.
+The deployed app supports a guest preview. Live company flows require the deployment to be connected to a configured Supabase project with the migrations below applied.
+
+## Run locally
+
+Requirements: Node.js 20.9 or newer and npm.
 
 ```sh
 npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`. With no Supabase environment variables, the app runs with local demo data. Work-order changes and field submissions are stored on the device in IndexedDB/local storage. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to `.env.local` to turn on cookie-based Supabase Auth, database writes, attachment uploads, and realtime work-order updates.
+Open [http://localhost:3000](http://localhost:3000). With no Supabase environment variables, the app runs in demo mode and the guest dashboard remains available. Demo data is illustrative; it is not a utility’s live operational data.
 
-Copy `.env.example` to `.env.local` and fill the values from the Supabase project's Connect panel.
+To enable authenticated, company-scoped data:
 
-### Roles and guest preview
+1. Copy `.env.example` to `.env.local`.
+   - PowerShell: `Copy-Item .env.example .env.local`
+   - macOS/Linux: `cp .env.example .env.local`
+2. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `.env.local` using the values from the Supabase project’s Connect panel.
+3. Configure the Supabase database and Auth redirect URLs below.
+4. Restart the development server after changing environment values.
 
-The dashboard is available to guests as a read-only sample workspace. The **Sign in** link opens login, and the login page links to self-signup. New users can create a company (becoming its first admin) or join a company with its signup code and request Supervisor or Technician access. Join requests remain blocked from company data until an admin approves them in-app. Authenticated users are routed by role:
+Never put a Supabase service-role key in a `NEXT_PUBLIC_` variable or browser code.
 
-| Role         | Intended access                                                                                                                                                                        |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `admin`      | Company-wide access; review access requests and manage crew, customers, assets, inspection templates, work, and schedules. The first account that creates a company becomes its admin. |
-| `supervisor` | View company operations and manage work orders and schedules.                                                                                                                          |
-                                                      |
-| `technician` | Field workspace with assigned jobs; update job status and submit assigned-job field updates and attachments.                                                                           |
+## Supabase setup
 
-The migrations enforce company, approval, and role access in PostgreSQL Row Level Security, not only in the interface. The signup RPC never grants a requested Supervisor or Technician role; an approved admin makes that change. Approval also creates the technician record when the approved role is Technician.
+1. Create a Supabase project.
+2. In the Supabase SQL Editor, run these migrations in timestamp order:
+   - `supabase/migrations/20261123000000_gridline_core.sql`
+   - `supabase/migrations/20261123010000_role_permissions.sql`
+   - `supabase/migrations/20261124000000_signup_approval.sql`
+3. In **Authentication → URL Configuration**, set the local Site URL to `http://localhost:3000` and add `http://localhost:3000/**` to the redirect URL allow list.
+4. For local testing, email confirmation can be disabled in the Email provider settings. For real users, enable confirmation and configure a custom SMTP provider so confirmation emails can be delivered reliably.
+5. Start the app and visit `/signup`. The first user creates a company and becomes its admin. The admin shares the company signup code from **Access requests**. A new user requests Technician or Supervisor access; an admin must approve the request before that user can see company data.
 
-## Included workflows
+The browser uses the Supabase publishable key and the signed-in user’s session. Company and role access is also enforced by PostgreSQL Row Level Security (RLS). The migrations create the private `work-order-attachments` storage bucket and enable work-order realtime updates.
 
-- Supervisor dashboard, priority work orders, status filters, schedule, asset list, inspection library, and CSV export.
-- Create and assign work orders to approved company technicians by database ID; the roster refreshes automatically, and offline assignments sync when reconnected.
-- Signed-in crew, assigned-work schedule, asset register, inspection templates, district breakdowns, and completion trend load from the current company database. Guest preview data stays illustrative and read-only.
-- Technician workspace with assigned jobs, structured checklists, field notes, camera/photo attachments, and completion updates.
-- IndexedDB queue for offline work updates and photo files, with retry on reconnect.
-- PWA manifest and service worker for install metadata, static app assets, and offline fallback.
-- Realtime work-order refresh through Supabase Realtime.
+## Roles and preview
 
-## Industry-informed workflow choices
+| Role | Current behavior |
+| --- | --- |
+| Guest | Read-only sample dashboard; can explore without an account. |
+| Admin | First account that creates a company; can share its signup code and approve/reject Supervisor or Technician access requests. |
+| Supervisor | Reviews company operations and creates/assigns work orders to approved company technicians. |
+| Dispatcher | Role and database policies exist for operational coordination, but signup does not offer Dispatcher as a self-requested role. |
+| Technician | Uses `/field` for assigned work, status updates, checklists, notes, and supported photo/PDF attachments. |
 
-The workflow reflects utility field-work patterns such as planned maintenance, service calls, outage/restoration dispatch, technician assignment, structured inspection and defect capture, map/location context, and offline job execution. References: [Oracle Utilities mobile workforce process](https://docs.oracle.com/cd/E29302_01/5.3%20Connect%20Products%20and%20Services/5.3.2_MWMv2.0.1_Manage_Fieldwork.pdf), [Esri electric utility field operations](https://www.esri.com/en-us/industries/electric/initiatives/field-operations), and [ServiceNow field service mobile documentation](https://downloads.docs.servicenow.com/pdf/enus/servicenow-xanadu-field-service-management-enus.pdf).
+## End-to-end demo flow
 
-This is a product prototype, not a substitute for approved switching instructions, safety permits, or a utility's authoritative GIS/OMS/EAM systems. Live technician location tracking is intentionally not enabled.
+1. Open `/` signed out and inspect the guest preview.
+2. Create a company/admin account at `/signup` (or use an already configured demo account, if provided separately).
+3. From **Access requests**, copy the company signup code.
+4. Create a second account requesting Technician access with that code; approve it from the admin account.
+5. Sign in as a Supervisor, create a work order, and assign the approved Technician from the live roster.
+6. Sign in as that Technician and open `/field`. Start the job, update the checklist, add a note, and select an attachment.
+7. To show offline behavior, load the field workspace first, switch the browser offline in DevTools, save a field update, then reconnect while keeping the app open. The app retries queued updates and media.
 
-The original static prototype is kept in [`prototype-static/`](./prototype-static/) as a reference snapshot.
+Do not present the starter checklist content as utility-approved safety instructions. The technician checklists are still sample/local definitions; the dashboard’s inspection-template view reads company templates, but those templates are not yet wired into the field checklist.
+
+## What is implemented
+
+- Guest preview and Supabase email/password sign-in/sign-up.
+- Company creation, signup code, and in-app approval for Supervisor/Technician access.
+- Company-scoped work orders, approved technician picker by database ID, priority/status handling, CSV export, and work-order realtime refresh.
+- Dynamic signed-in views for company crew, assigned-work schedule, assets, inspection templates, districts, and completion trend.
+- Technician field view for assigned work, local progress, notes, checklist interaction, and attachment capture/selection.
+- IndexedDB queue for field updates and media; local storage for smaller field/order snapshots; reconnect retry while the app is open.
+- PWA manifest, service worker, public shell assets, and offline fallback.
+
+## Research, decisions, and trade-offs
+
+The project models work orders as the office-to-field handoff, uses stable technician IDs for assignment, and enforces company boundaries in PostgreSQL RLS. An installable PWA fits the dashboard-plus-phone brief and shares one frontend; IndexedDB can retain queued updates and media. Sync is foreground retry rather than guaranteed background sync. Full conflict resolution, idempotency, asset/template editing, integration with utility GIS/OMS/EAM systems, automatic assignment, live GPS tracking, push notifications, PDF reports, and billing are outside this prototype’s current scope.
+
+See [RESEARCH_NOTE.md](./RESEARCH_NOTE.md) for sources.
