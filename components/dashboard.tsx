@@ -73,6 +73,7 @@ type Page =
   | "Assets"
   | "Inspections"
   | "Reports";
+type OverviewRange = "today" | "7days" | "30days";
 const navItems: { label: Page; icon: typeof Grid2X2 }[] = [
   { label: "Overview", icon: Grid2X2 },
   { label: "Work orders", icon: ClipboardCheck },
@@ -165,12 +166,6 @@ const demoInspectionTemplates: InspectionTemplate[] = [
     version: 1,
     checklist: Array(7).fill(null),
   },
-];
-const districts = [
-  { name: "North District", count: 42, change: "+8%", bar: "w-[76%]" },
-  { name: "Central District", count: 38, change: "+3%", bar: "w-[69%]" },
-  { name: "South District", count: 31, change: "−2%", bar: "w-[56%]" },
-  { name: "East District", count: 17, change: "+12%", bar: "w-[31%]" },
 ];
 const assetRows = [
   {
@@ -414,6 +409,7 @@ export function Dashboard({
 }) {
   const router = useRouter();
   const [page, setPage] = useState<Page>("Overview");
+  const [overviewRange, setOverviewRange] = useState<OverviewRange>("today");
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [orders, setOrders] = useState(initialOrders);
   const [technicians, setTechnicians] = useState<TechnicianOption[]>(
@@ -716,6 +712,21 @@ export function Dashboard({
         .sort((a, b) => priorityRank(a.priority) - priorityRank(b.priority)),
     [orders, filter, search],
   );
+  const overviewOrders = useMemo(() => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (overviewRange === "7days") start.setDate(start.getDate() - 6);
+    if (overviewRange === "30days") start.setDate(start.getDate() - 29);
+    return orders.filter((order) => {
+      if (!order.createdAt) return false;
+      const createdAt = new Date(order.createdAt);
+      return (
+        !Number.isNaN(createdAt.getTime()) &&
+        createdAt >= start &&
+        createdAt <= now
+      );
+    });
+  }, [orders, overviewRange]);
   const openCount = metrics.openOrders;
   const completedCount = metrics.completedToday;
   const scheduleRows = useMemo(() => {
@@ -739,8 +750,7 @@ export function Dashboard({
       }));
   }, [guestMode, orders]);
   const districtSummary = useMemo(() => {
-    if (guestMode) return districts;
-    const counts = orders.reduce<Record<string, number>>((result, order) => {
+    const counts = overviewOrders.reduce<Record<string, number>>((result, order) => {
       result[order.district || "Other"] =
         (result[order.district || "Other"] ?? 0) + 1;
       return result;
@@ -753,34 +763,24 @@ export function Dashboard({
         bar: "",
       }))
       .sort((a, b) => b.count - a.count);
-  }, [guestMode, orders]);
+  }, [overviewOrders]);
   const overviewBars = useMemo(() => {
-    if (guestMode)
-      return {
-        labels: ["6 AM", "8 AM", "10 AM", "12 PM", "2 PM", "4 PM", "6 PM"],
-        parts: [
-          [29, 23, 26],
-          [33, 27, 21],
-          [37, 31, 28],
-          [44, 25, 30],
-          [42, 30, 27],
-          [34, 27, 20],
-          [24, 20, 13],
-        ],
-      };
     const names = [
-      ...new Set(orders.map((order) => order.district || "Other")),
+      ...new Set(overviewOrders.map((order) => order.district || "Other")),
     ].slice(0, 7);
     const max = Math.max(
       ...names.map(
-        (name) => orders.filter((order) => order.district === name).length,
+        (name) =>
+          overviewOrders.filter((order) => order.district === name).length,
       ),
       1,
     );
     return {
       labels: names,
       parts: names.map((name) => {
-        const group = orders.filter((order) => order.district === name);
+        const group = overviewOrders.filter(
+          (order) => order.district === name,
+        );
         return [
           group.filter((order) => order.status === "Completed").length,
           group.filter((order) => order.status === "In progress").length,
@@ -793,25 +793,19 @@ export function Dashboard({
         );
       }),
     };
-  }, [guestMode, orders]);
-  const overviewStatusLabels = guestMode
-    ? [
-        ["bg-[#55b27d]", "Completed"],
-        ["bg-[#a3d5b6]", "In progress"],
-        ["bg-[#e1eee6]", "Open"],
-      ]
-    : [
+  }, [overviewOrders]);
+  const overviewStatusLabels = [
         [
           "bg-[#55b27d]",
-          `Completed ${orders.filter((order) => order.status === "Completed").length}`,
+          `Completed ${overviewOrders.filter((order) => order.status === "Completed").length}`,
         ],
         [
           "bg-[#a3d5b6]",
-          `In progress ${orders.filter((order) => order.status === "In progress").length}`,
+          `In progress ${overviewOrders.filter((order) => order.status === "In progress").length}`,
         ],
         [
           "bg-[#e1eee6]",
-          `Open ${orders.filter((order) => order.status === "Open" || order.status === "Needs review").length}`,
+          `Open ${overviewOrders.filter((order) => order.status === "Open" || order.status === "Needs review").length}`,
         ],
       ];
   const busyTechnicianIds = new Set(
@@ -900,6 +894,7 @@ export function Dashboard({
   const createWorkOrder = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const createdAt = new Date().toISOString();
     const id = `WO-${Date.now().toString().slice(-8)}`;
     const selectedTechnicianId = String(form.get("technicianId") || "");
     const selectedTechnician = technicians.find(
@@ -919,6 +914,7 @@ export function Dashboard({
       priority: String(form.get("priority")) as Priority,
       status: "Open",
       assetTag: String(form.get("assetTag") || ""),
+      createdAt,
       scheduledAt: form.get("scheduledAt")
         ? new Date(String(form.get("scheduledAt"))).toLocaleTimeString(
             "en-US",
@@ -1317,12 +1313,38 @@ export function Dashboard({
                   <div>
                     <CardTitle>Operations overview</CardTitle>
                     <CardDescription>
-                      Live status across your service territory
+                      {guestMode
+                        ? "Sample preview data · filtered by creation date"
+                        : `Work orders created ${overviewRange === "today" ? "today" : overviewRange === "7days" ? "in the last 7 days" : "in the last 30 days"}`}
                     </CardDescription>
                   </div>
-                  <button className="flex h-7 items-center gap-2 rounded-md border border-line px-2.5 text-[10px] text-[#62746b]">
-                    Today <ChevronDown size={13} />
-                  </button>
+                  <label className="relative">
+                    <span className="sr-only">Filter overview by date</span>
+                    <select
+                      aria-label="Filter overview by date"
+                      value={overviewRange}
+                      onChange={(event) => {
+                        const value = event.currentTarget.value;
+                        if (
+                          value === "today" ||
+                          value === "7days" ||
+                          value === "30days"
+                        ) {
+                          setOverviewRange(value);
+                        }
+                      }}
+                      className="h-7 appearance-none rounded-md border border-line bg-white py-0 pl-2.5 pr-7 text-[10px] text-[#62746b] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      <option value="today">Today</option>
+                      <option value="7days">Last 7 days</option>
+                      <option value="30days">Last 30 days</option>
+                    </select>
+                    <ChevronDown
+                      aria-hidden="true"
+                      size={13}
+                      className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#62746b]"
+                    />
+                  </label>
                 </CardHeader>
                 <CardContent className="grid gap-5 pt-4 lg:grid-cols-[minmax(0,1fr)_235px]">
                   <div>
@@ -1335,7 +1357,8 @@ export function Dashboard({
                       ))}
                     </div>
                     <div className="relative flex h-[165px] items-end justify-around gap-3 border-b border-dashed border-line bg-[linear-gradient(to_bottom,transparent_24%,#edf1ee_24%,#edf1ee_calc(24%+1px),transparent_calc(24%+1px),transparent_49%,#edf1ee_49%,#edf1ee_calc(49%+1px),transparent_calc(49%+1px),transparent_74%,#edf1ee_74%,#edf1ee_calc(74%+1px),transparent_calc(74%+1px))] px-2">
-                      {overviewBars.parts.map((parts, index) => (
+                      {overviewBars.parts.length ? (
+                        overviewBars.parts.map((parts, index) => (
                         <div
                           key={index}
                           className="flex h-full w-[9%] max-w-[34px] flex-col-reverse justify-end gap-[2px] pb-6"
@@ -1348,7 +1371,12 @@ export function Dashboard({
                             />
                           ))}
                         </div>
-                      ))}
+                        ))
+                      ) : (
+                        <p className="absolute inset-0 grid place-items-center text-[10px] text-muted">
+                          No work orders were created in this period.
+                        </p>
+                      )}
                     </div>
                     <div className="ml-7 flex justify-around pt-2 font-mono-ui text-[9px] text-[#98a39d]">
                       {overviewBars.labels.map((label) => (
@@ -1395,6 +1423,11 @@ export function Dashboard({
                           </div>
                         </div>
                       ))}
+                      {!districtSummary.length && (
+                        <p className="text-[10px] text-muted">
+                          No work orders were created in this period.
+                        </p>
+                      )}
                     </div>
                     <button
                       onClick={() => setPage("Work orders")}
