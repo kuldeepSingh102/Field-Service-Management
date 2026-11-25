@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --color-forest: #173b30;
+  --color-ink: #203d32;
+  --color-muted: #819088;
+  --color-line: #e6ece8;
+  --color-mist: #f5f7f5;
+  --color-sage: #e9f3eb;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: 0 2px 12px rgba(24, 48, 40, .035);
+}
+
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+html { min-height: 100%; background: #f5f7f5; }
+body { margin: 0; min-height: 100vh; background: #f5f7f5; color: #203d32; font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; font-size: 13px; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+::selection { background: #cde8d6; color: #173b30; }
+.font-display { font-family: "Manrope", "DM Sans", sans-serif; }
+.font-mono-ui { font-family: "DM Mono", ui-monospace, monospace; }
+.sidebar-scroll { scrollbar-width: thin; scrollbar-color: #d8e1db transparent; }
+.table-scroll { scrollbar-width: thin; }
+.grid-bg { background-image: linear-gradient(to bottom, rgba(232,238,234,.85) 1px, transparent 1px); background-size: 100% 34px; }
+.modal-backdrop { animation: fade-in .16s ease-out; }
+.toast-in { animation: toast-in .2s ease-out; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes toast-in { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@media(max-width: 768px) { .desktop-only { display: none !important; } }

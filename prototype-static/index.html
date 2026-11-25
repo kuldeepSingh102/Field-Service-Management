@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10241f" />
+    <meta
+      name="description"
+      content="Gridline utility field operations workspace"
+    />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Gridline — Field operations</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Gridline home"
+          ><span class="brand-mark"
+            ><svg viewBox="0 0 32 32">
+              <path
+                d="M16 3 7 19h7l-2 10 13-18h-8l3-8z"
+                fill="currentColor"
+              /></svg></span
+          ><span>gridline<span class="brand-period">.</span></span></a
+        >
+        <div class="workspace-switch">
+          <span class="utility-avatar">N</span
+          ><span class="workspace-copy"
+            ><strong>Northstar Electric</strong
+            ><small>Operations workspace</small></span
+          ><span class="chevron">⌄</span>
+        </div>
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-page="overview">
+            <span class="nav-icon">▦</span>Overview
+          </button>
+          <button class="nav-item" data-page="work-orders">
+            <span class="nav-icon">▤</span>Work orders<span class="nav-count"
+              >12</span
+            >
+          </button>
+          <button class="nav-item" data-page="crew">
+            <span class="nav-icon">♧</span>Crew &amp; schedule
+          </button>
+          <button class="nav-item" data-page="assets">
+            <span class="nav-icon">⌁</span>Assets
+          </button>
+        </nav>
+        <div class="nav-label second-label">FIELD TOOLS</div>
+        <nav class="main-nav" aria-label="Field tools">
+          <button class="nav-item" data-page="inspections">
+            <span class="nav-icon">☷</span>Inspections
+          </button>
+          <button class="nav-item" data-page="reports">
+            <span class="nav-icon">▥</span>Reports
+          </button>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-status">
+          <span class="pulse-dot"></span
+          ><span
+            ><strong>All systems operational</strong
+            ><small>Last checked just now</small></span
+          >
+        </div>
+        <button class="profile-button">
+          <span class="profile-avatar">MC</span
+          ><span class="profile-copy"
+            ><strong>Morgan Chen</strong><small>Operations manager</small></span
+          ><span class="more">···</span>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs">
+            <span>Northstar Electric</span><span class="crumb-divider">/</span
+            ><strong id="breadcrumb-current">Overview</strong>
+          </div>
+          <div class="topbar-actions">
+            <div class="connection-pill" id="connection-status">
+              <span class="status-dot"></span
+              ><span id="connection-label">Connected</span>
+            </div>
+            <button
+              class="icon-button"
+              id="notifications-button"
+              aria-label="Notifications"
+            >
+              ♧<i></i></button
+            ><span class="topbar-separator"></span
+            ><button class="date-button" id="date-button">
+              Mon, Nov 23 <span>⌄</span>
+            </button>
+          </div>
+        </header>
+        <div class="page-wrap" id="overview-page">
+          <div class="welcome-row">
+            <div>
+              <div class="eyebrow">
+                <span class="eyebrow-line"></span>MONDAY, NOVEMBER 23, 2026
+              </div>
+              <h1>Good morning, Morgan <span class="wave">✳</span></h1>
+              <p class="page-subtitle">
+                Here’s what’s happening across your service territory today.
+              </p>
+            </div>
+            <div class="welcome-actions">
+              <button class="button button-secondary" id="export-button">
+                <span>↧</span> Export report</button
+              ><button class="button button-primary" id="new-order-button">
+                <span>＋</span> New work order
+              </button>
+            </div>
+          </div>
+          <section class="metrics-grid" aria-label="Today's metrics">
+            <article class="metric-card">
+              <div class="metric-top">
+                <span>OPEN WORK ORDERS</span
+                ><span class="metric-icon mint">▤</span>
+              </div>
+              <div class="metric-value">128</div>
+              <div class="metric-bottom">
+                <span class="trend up">↗ 12%</span><span>vs. last week</span
+                ><span class="mini-bars"
+                  ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+                ></span>
+              </div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top">
+                <span>ACTIVE TECHNICIANS</span
+                ><span class="metric-icon blue">♧</span>
+              </div>
+              <div class="metric-value">
+                24<span class="metric-denom"> / 31</span>
+              </div>
+              <div class="metric-bottom">
+                <span class="metric-note"
+                  ><span class="tiny-dot green"></span> 18 in the field</span
+                ><span>·</span><span>6 on standby</span>
+              </div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top">
+                <span>COMPLETED TODAY</span
+                ><span class="metric-icon lilac">✓</span>
+              </div>
+              <div class="metric-value">36</div>
+              <div class="metric-bottom">
+                <span class="trend up">↗ 8%</span><span>vs. daily average</span
+                ><span class="mini-bars violet"
+                  ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+                ></span>
+              </div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top">
+                <span>SLA COMPLIANCE</span
+                ><span class="metric-icon amber">◷</span>
+              </div>
+              <div class="metric-value">
+                96.4<span class="metric-unit">%</span>
+              </div>
+              <div class="metric-bottom">
+                <span class="trend up">↗ 2.4%</span><span>this month</span
+                ><span class="sla-meter"><i></i></span>
+              </div>
+            </article>
+          </section>
+
+          <section class="operations-card card">
+            <div class="section-heading">
+              <div>
+                <h2>Operations overview</h2>
+                <p>Live status across your service territory</p>
+              </div>
+              <button class="select-button" id="range-button">
+                Today <span>⌄</span>
+              </button>
+            </div>
+            <div class="operations-body">
+              <div class="chart-panel">
+                <div class="chart-legend">
+                  <span
+                    ><i class="legend-square legend-complete"></i
+                    >Completed</span
+                  ><span
+                    ><i class="legend-square legend-progress"></i>In
+                    progress</span
+                  ><span><i class="legend-square legend-open"></i>Open</span>
+                </div>
+                <div class="chart-plot">
+                  <div class="chart-y">
+                    <span>40</span><span>30</span><span>20</span><span>10</span
+                    ><span>0</span>
+                  </div>
+                  <div class="chart-main">
+                    <div class="grid-lines">
+                      <i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                    <div class="bar-groups">
+                      <div class="bar-group">
+                        <div class="stack">
+                          <i class="bar open" style="height: 26%"></i
+                          ><i class="bar progress" style="height: 23%"></i
+                          ><i class="bar complete" style="height: 29%"></i>
+                        </div>
+                        <span>6 AM</span>
+                      </div>
+                      <div class="bar-group">
+                        <div class="stack">
+                          <i class="bar open" style="height: 21%"></i
+                          ><i class="bar progress" style="height: 27%"></i
+                          ><i class="bar complete" style="height: 33%"></i>
+                        </div>
+                        <span>8 AM</span>
+                      </div>
+                      <div class="bar-group">
+                        <div class="stack">
+                          <i class="bar open" style="height: 28%"></i
+                          ><i class="bar progress" style="height: 31%"></i
+                          ><i class="bar complete" style="height: 37%"></i>
+                        </div>
+                        <span>10 AM</span>
+                      </div>
+                      <div class="bar-group">
+                        <div class="stack">
+                          <i class="bar open" style="height: 30%"></i
+                          ><i class="bar progress" style="height: 25%"></i
+                          ><i class="bar complete" style="height: 44%"></i>
+                        </div>
+                        <span>12 PM</span>
+                      </div>
+                      <div class="bar-group">
+                        <div class="stack">
+                          <i class="bar open" style="height: 27%"></i
+                          ><i class="bar progress" style="height: 30%"></i
+                          ><i class="bar complete" style="height: 42%"></i>
+                        </div>
+                        <span>2 PM</span>
+                      </div>
+                      <div class="bar-group">
+                        <div class="stack">
+                          <i class="bar open" style="height: 20%"></i
+                          ><i class="bar progress" style="height: 27%"></i
+                          ><i class="bar complete" style="height: 34%"></i>
+                        </div>
+                        <span>4 PM</span>
+                      </div>
+                      <div class="bar-group">
+                        <div class="stack">
+                          <i class="bar open" style="height: 13%"></i
+                          ><i class="bar progress" style="height: 20%"></i
+                          ><i class="bar complete" style="height: 24%"></i>
+                        </div>
+                        <span>6 PM</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ops-divider"></div>
+              <div class="territory-panel">
+                <div class="territory-title">
+                  <span>WORK BY DISTRICT</span
+                  ><button aria-label="More district options">···</button>
+                </div>
+                <div class="district-list">
+                  <div class="district-row">
+                    <span class="district-dot district-a"></span
+                    ><span class="district-name">North District</span
+                    ><strong>42</strong><span class="district-change">+8%</span>
+                  </div>
+                  <div class="district-row">
+                    <span class="district-dot district-b"></span
+                    ><span class="district-name">Central District</span
+                    ><strong>38</strong><span class="district-change">+3%</span>
+                  </div>
+                  <div class="district-row">
+                    <span class="district-dot district-c"></span
+                    ><span class="district-name">South District</span
+                    ><strong>31</strong
+                    ><span class="district-change negative">−2%</span>
+                  </div>
+                  <div class="district-row">
+                    <span class="district-dot district-d"></span
+                    ><span class="district-name">East District</span
+                    ><strong>17</strong
+                    ><span class="district-change">+12%</span>
+                  </div>
+                </div>
+                <button class="text-link" id="district-link">
+                  View district breakdown <span>→</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="lower-grid">
+            <div class="work-card card">
+              <div class="section-heading work-heading">
+                <div>
+                  <h2>Priority work orders</h2>
+                  <p>Jobs that need your attention</p>
+                </div>
+                <button class="text-link" id="all-orders-link">
+                  View all <span>→</span>
+                </button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>WORK ORDER</th>
+                      <th>LOCATION</th>
+                      <th>ASSIGNEE</th>
+                      <th>PRIORITY</th>
+                      <th>STATUS</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-body"></tbody>
+                </table>
+              </div>
+              <div class="table-footer">
+                <span
+                  >Showing <strong>5</strong> of <strong>128</strong> work
+                  orders</span
+                >
+                <div class="pagination">
+                  <button disabled>←</button
+                  ><button class="page-current">1</button><button>2</button
+                  ><button>3</button><span>…</span><button>26</button
+                  ><button>→</button>
+                </div>
+              </div>
+            </div>
+            <aside class="right-column">
+              <section class="schedule-card card">
+                <div class="section-heading">
+                  <div>
+                    <h2>Today’s schedule</h2>
+                    <p>Monday, November 23</p>
+                  </div>
+                  <button
+                    class="small-icon-button"
+                    id="schedule-menu"
+                    aria-label="Schedule options"
+                  >
+                    ···
+                  </button>
+                </div>
+                <div class="schedule-summary">
+                  <span><i class="tiny-dot green"></i> 18 active</span
+                  ><span><i class="tiny-dot gray"></i> 6 standby</span>
+                </div>
+                <div id="schedule-list" class="schedule-list"></div>
+                <button class="schedule-link" id="schedule-link">
+                  View full schedule <span>→</span>
+                </button>
+              </section>
+              <section class="sync-card">
+                <div class="sync-orb"><span>↻</span></div>
+                <div>
+                  <strong>Built for the field</strong>
+                  <p>
+                    Technicians can keep working offline. Updates sync
+                    automatically when they’re back online.
+                  </p>
+                  <button id="open-field-mode">
+                    Open field mode <span>→</span>
+                  </button>
+                </div>
+              </section>
+            </aside>
+          </section>
+        </div>
+
+        <section class="page-wrap secondary-page hidden" id="work-orders-page">
+          <div class="welcome-row">
+            <div>
+              <div class="eyebrow">
+                <span class="eyebrow-line"></span>FIELD OPERATIONS
+              </div>
+              <h1>Work orders</h1>
+              <p class="page-subtitle">
+                Track, assign, and prioritize service work across your
+                territory.
+              </p>
+            </div>
+            <button class="button button-primary" id="new-order-button-2">
+              <span>＋</span> New work order
+            </button>
+          </div>
+          <div class="work-filter-row">
+            <div class="filter-tabs">
+              <button class="selected" data-filter="All">
+                All <span>128</span></button
+              ><button data-filter="Open">Open <span>54</span></button
+              ><button data-filter="In progress">
+                In progress <span>38</span></button
+              ><button data-filter="Completed">
+                Completed <span>36</span>
+              </button>
+            </div>
+            <button class="button button-secondary" id="filter-button">
+              ☷ &nbsp; Filters
+            </button>
+          </div>
+          <div class="work-card card full-table">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>WORK ORDER</th>
+                    <th>LOCATION</th>
+                    <th>ASSIGNEE</th>
+                    <th>PRIORITY</th>
+                    <th>STATUS</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="all-orders-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="field-screen hidden" id="field-page">
+          <header class="field-header">
+            <a class="brand field-brand" href="#"
+              ><span class="brand-mark"
+                ><svg viewBox="0 0 32 32">
+                  <path
+                    d="M16 3 7 19h7l-2 10 13-18h-8l3-8z"
+                    fill="currentColor"
+                  /></svg></span
+              ><span>gridline<span class="brand-period">.</span></span></a
+            >
+            <div class="field-header-right">
+              <div class="connection-pill" id="field-connection">
+                <span class="status-dot"></span><span>Connected</span>
+              </div>
+              <button class="field-user" aria-label="Technician profile">
+                JR
+              </button>
+            </div>
+          </header>
+          <div class="field-layout">
+            <nav class="field-nav">
+              <button class="field-tab active" data-field-tab="jobs">
+                <span>▤</span> My jobs <b id="field-job-count">4</b></button
+              ><button class="field-tab" data-field-tab="history">
+                <span>◷</span> History</button
+              ><button class="field-tab" data-field-tab="checklists">
+                <span>☷</span> Checklists
+              </button>
+              <div class="field-nav-bottom">
+                <div class="field-sync-state">
+                  <span class="sync-indicator"></span
+                  ><span id="sync-message">All changes synced</span>
+                </div>
+                <button id="back-dashboard">
+                  ← &nbsp; Supervisor dashboard
+                </button>
+              </div>
+            </nav>
+            <div class="field-main">
+              <div class="field-welcome">
+                <div>
+                  <div class="eyebrow">
+                    <span class="eyebrow-line"></span>MONDAY, NOVEMBER 23
+                  </div>
+                  <h1>Good morning, Jamie</h1>
+                  <p>Your route is looking good. Stay safe out there.</p>
+                </div>
+                <div class="field-weather">
+                  <span>☀</span>
+                  <div><b>68°</b><small>Clear skies</small></div>
+                </div>
+              </div>
+              <div class="field-stats">
+                <div><small>MY JOBS</small><b id="my-jobs-stat">4</b></div>
+                <div><small>COMPLETED</small><b id="completed-stat">2</b></div>
+                <div>
+                  <small>ROUTE DISTANCE</small><b>18.6 <small>mi</small></b>
+                </div>
+              </div>
+              <div class="field-section-title">
+                <div>
+                  <h2>Today’s assignments</h2>
+                  <p>North District · Route 07</p>
+                </div>
+                <button id="field-sort">⇅ &nbsp; Priority</button>
+              </div>
+              <div class="field-jobs" id="field-jobs"></div>
+              <div class="field-history hidden" id="field-history">
+                <h2>Completed work</h2>
+                <p>Recently finished jobs and saved updates.</p>
+                <div id="history-list"></div>
+              </div>
+              <div class="field-checklists hidden" id="field-checklists">
+                <h2>Inspection checklists</h2>
+                <p>Standard forms ready to use offline.</p>
+                <div class="checklist-library">
+                  <button
+                    class="checklist-template"
+                    data-template="Transformer inspection"
+                  >
+                    <span class="template-icon">ϟ</span
+                    ><span
+                      ><b>Transformer inspection</b
+                      ><small>12 checkpoints · Updated Nov 18</small></span
+                    ><span>→</span></button
+                  ><button
+                    class="checklist-template"
+                    data-template="Pole safety assessment"
+                  >
+                    <span class="template-icon">⌁</span
+                    ><span
+                      ><b>Pole safety assessment</b
+                      ><small>9 checkpoints · Updated Nov 12</small></span
+                    ><span>→</span></button
+                  ><button
+                    class="checklist-template"
+                    data-template="Substation perimeter check"
+                  >
+                    <span class="template-icon">▦</span
+                    ><span
+                      ><b>Substation perimeter check</b
+                      ><small>7 checkpoints · Updated Nov 8</small></span
+                    ><span>→</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="modal-backdrop">
+      <section
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div class="modal-header">
+          <div>
+            <div class="eyebrow">
+              <span class="eyebrow-line"></span>FIELD WORKSPACE
+            </div>
+            <h2 id="modal-title">Work order</h2>
+          </div>
+          <button class="modal-close" id="modal-close" aria-label="Close">
+            ×
+          </button>
+        </div>
+        <div id="modal-content"></div>
+      </section>
+    </div>
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
